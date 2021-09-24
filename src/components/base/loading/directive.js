@@ -30,6 +30,7 @@ const loadingDirective = {
   }
 }
 
+// 追加样式
 function append (el) {
   const style = getComputedStyle(el)
   if (['absolute', 'fixed', 'relative'].indexOf(style.position) === -1) {
@@ -38,6 +39,7 @@ function append (el) {
   el.appendChild(el.instance.$el)
 }
 
+// 移除样式
 function remove (el) {
   removeClass(el, relativeCls)
   el.removeChild(el.instance.$el)

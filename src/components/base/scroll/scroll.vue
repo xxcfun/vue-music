@@ -1,4 +1,5 @@
 <template>
+  <!-- 屏幕滚动组件 -->
   <div ref="rootRef">
     <slot></slot>
   </div>

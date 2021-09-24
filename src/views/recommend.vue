@@ -1,12 +1,15 @@
 <template>
+  <!-- 热门歌单推荐页面 -->
   <div class="recommend" v-loading="loading">
     <scroll class="recommend-content">
       <div>
+        <!-- 宣传广告滚动屏 -->
         <div class="slider-wrapper">
           <div class="slider-content">
             <slider v-if="sliders.length" :sliders="sliders"/>
           </div>
         </div>
+        <!-- 热门歌单推荐 -->
         <div class="recommend-list">
           <h1 class="list-title" v-show="!loading">热门歌单推荐</h1>
           <ul>

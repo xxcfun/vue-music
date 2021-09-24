@@ -1,4 +1,5 @@
 <template>
+  <!-- 菜单导航栏 -->
   <div class="tab">
     <router-link
       class="tab-item"

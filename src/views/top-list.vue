@@ -1,4 +1,5 @@
 <template>
+  <!-- 榜单页面 -->
   <div class="top-list">
     榜单页面
   </div>

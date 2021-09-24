@@ -1,4 +1,5 @@
 <template>
+  <!-- 头部标题 -->
   <div class="header">
     <span class="icon"></span>
     <h1 class="text">SHIDog Music</h1>

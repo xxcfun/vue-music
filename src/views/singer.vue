@@ -1,4 +1,5 @@
 <template>
+  <!-- 歌手页面 -->
   <div class="singer" v-loading="loading">
     <index-list :data="singers"/>
   </div>

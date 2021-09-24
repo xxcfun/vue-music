@@ -68,11 +68,13 @@
       const { shortcutList, scrollRef, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(props, groupRef)
 
       return {
+        // fixed钩子
         groupRef,
         onScroll,
         fixedTitle,
         fixedStyle,
         currentIndex,
+        // shortcut钩子
         shortcutList,
         scrollRef,
         onShortcutTouchStart,

@@ -1,5 +1,7 @@
 <template>
+  <!-- 宣传广告滚动组件 -->
   <div class="slider" ref="rootRef">
+    <!-- 广告图 -->
     <div class="slider-group">
       <div class="slider-page"
            v-for="item in sliders"
@@ -10,6 +12,7 @@
         </a>
       </div>
     </div>
+    <!-- 控制按钮 -->
     <div class="dots-wrapper">
       <span class="dot"
             v-for="(item, index) in sliders"
@@ -42,14 +45,6 @@
         rootRef,
         currentPageIndex
       }
-    },
-    methods: {
-      onload () {
-        console.log(this.sliders)
-      }
-    },
-    created () {
-      this.onload()
     }
   }
 </script>
