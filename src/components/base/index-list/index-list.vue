@@ -2,7 +2,9 @@
   <scroll class="index-list"
           :probe-type="3"
           @scroll="onScroll"
+          ref="scrollRef"
   >
+    <!-- 歌手列表 -->
     <ul ref="groupRef">
       <li class="group"
           v-for="group in data"
@@ -20,11 +22,27 @@
         </ul>
       </li>
     </ul>
+    <!-- 固定标题 -->
     <div class="fixed"
          v-show="fixedTitle"
          :style="fixedStyle"
     >
       <div class="fixed-title">{{ fixedTitle }}</div>
+    </div>
+    <!-- 快速导航入口 -->
+    <div class="shortcut"
+         @touchstart.stop.prevent="onShortcutTouchStart"
+         @touchmove.stop.prevent="onShortcutTouchMove"
+         @touchend.stop.prevent
+    >
+      <ul>
+        <li class="item"
+            v-for="(item, index) in shortcutList"
+            :key="item"
+            :data-index="index"
+            :class="{'current': currentIndex === index}"
+        >{{ item }}</li>
+      </ul>
     </div>
   </scroll>
 </template>
@@ -32,6 +50,7 @@
 <script>
   import Scroll from '../scroll/scroll'
   import useFixed from './use-fixed'
+  import useShortcut from './use-shortcut'
 
   export default {
     name: 'index-list',
@@ -45,13 +64,19 @@
       }
     },
     setup (props) {
-      const { groupRef, onScroll, fixedTitle, fixedStyle } = useFixed(props)
+      const { groupRef, onScroll, fixedTitle, fixedStyle, currentIndex } = useFixed(props)
+      const { shortcutList, scrollRef, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(props, groupRef)
 
       return {
         groupRef,
         onScroll,
         fixedTitle,
-        fixedStyle
+        fixedStyle,
+        currentIndex,
+        shortcutList,
+        scrollRef,
+        onShortcutTouchStart,
+        onShortcutTouchMove
       }
     }
   }
@@ -102,6 +127,27 @@
         font-size: $font-size-small;
         color: $color-text-l;
         background: $color-highlight-background;
+      }
+    }
+    .shortcut {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      padding: 20px 0;
+      border-radius: 10px;
+      text-align: center;
+      background: $color-background-d;
+      font-family: Helvetica;
+      .item {
+        padding: 3px;
+        line-height: 1;
+        color: $color-text-l;
+        font-size: $font-size-small;
+        &.current {
+          color: $color-theme;
+        }
       }
     }
   }
