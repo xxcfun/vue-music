@@ -1,8 +1,12 @@
 <template>
   <!-- 歌手页面 -->
   <div class="singer" v-loading="loading">
-    <index-list :data="singers"/>
+    <index-list
+      :data="singers"
+      @select="selectSinger"
+    />
   </div>
+  <router-view :singer="selectedSinger"></router-view>
 </template>
 
 <script>
@@ -14,7 +18,8 @@
     components: { IndexList },
     data () {
       return {
-        singers: []
+        singers: [],
+        selectedSinger: null
       }
     },
     computed: {
@@ -25,6 +30,12 @@
     async created () {
       const result = await getSingerList()
       this.singers = result.singers
+    },
+    methods: {
+      selectSinger (singer) {
+        this.selectedSinger = singer
+        this.$router.push({ path: `/singer/${singer.mid}` })
+      }
     }
   }
 </script>
