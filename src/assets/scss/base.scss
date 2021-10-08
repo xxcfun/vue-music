@@ -10,3 +10,12 @@ body, html {
 .g-relative {
   position: relative;
 }
+
+/* 路由切换动画  TODO 推出没有效果，后面要进行修改*/
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.3s;
+}
+
+.slide-enter-from, .slide-leave-to {
+  transform: translate3d(100%, 0, 0);
+}

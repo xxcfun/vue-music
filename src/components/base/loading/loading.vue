@@ -1,6 +1,6 @@
 <template>
   <div class="loading">
-    <!-- 正在载入组件 -->
+    <!-- 正在载入组件 (这里的注释要写到外面，不会有loading的效果，同理，no-result组件一样)-->
     <div class="loading-content">
       <img src="./loading.gif" alt="" width="24" height="24">
       <p class="desc">{{ title }}</p>
