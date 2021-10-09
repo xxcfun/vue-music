@@ -1,6 +1,6 @@
 <template>
-  <!-- 歌手详情页面 -->
   <div class="singer-detail">
+    <!-- 歌手详情页面 -->
     <music-list
       :songs="songs"
       :title="title"
