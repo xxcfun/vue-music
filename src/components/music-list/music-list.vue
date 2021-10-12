@@ -26,7 +26,8 @@
             @scroll="onScroll"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"/>
+        <song-list :songs="songs"
+                   @select="selectItem"/>
       </div>
     </scroll>
   </div>
@@ -35,6 +36,7 @@
 <script>
   import Scroll from '../base/scroll/scroll'
   import SongList from '../base/song-list/song-list'
+  import { mapActions } from 'vuex'
 
   const RESERVED_HEIGHT = 40
 
@@ -126,7 +128,16 @@
       },
       onScroll (pos) {
         this.scrollY = -pos.y
-      }
+      },
+      selectItem ({ song, index }) {
+        this.selectPlay({
+          list: this.songs,
+          index
+        })
+      },
+      ...mapActions([
+        'selectPlay'
+      ])
     }
   }
 </script>
