@@ -15,6 +15,7 @@ export default function useMode() {
   // 点击图标，改变播放方式
   function changeMode () {
     const mode = (playMode.value + 1) % 3
+    // 分发一个changeMode给action
     store.dispatch('changeMode', mode)
   }
 
