@@ -33,3 +33,20 @@ export function randomPlay ({ commit }, list) {
   // 随机播放索引就没必要了，直接写0
   commit('setCurrentIndex', 0)
 }
+
+// 播放模式改变时，列表也随之改变
+export function changeMode ({ commit, state, getters }, mode) {
+  const currentId = getters.currentSong.id
+  if (mode === PLAY_MODE.random) {
+    commit('setPlayList', shuffle(state.sequenceList))
+  } else {
+    commit('setPlayList', state.sequenceList)
+  }
+  // 新列表中的歌曲仍然是播放中的歌曲
+  const index = state.playList.findIndex((song) => {
+    return song.id === currentId
+  })
+
+  commit('setCurrentIndex', index)
+  commit('setPlayMode', mode)
+}
