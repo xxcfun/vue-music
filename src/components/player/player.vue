@@ -19,6 +19,16 @@
       </div>
       <!-- 底部 -->
       <div class="bottom">
+        <!-- 进度条 -->
+        <div class="progress-wrapper">
+          <span class="time time-l">{{ formatTime(currentTime) }}</span>
+          <div class="progress-bar-wrapper">
+            <progress-bar :progress="progress"
+                          @progress-changing="onProgressChanging"
+                          @progress-changed="onProgressChanged"/>
+          </div>
+          <span class="time time-r">{{ formatTime(currentSong.duration) }}</span>
+        </div>
         <!-- 操作按钮 -->
         <div class="operators">
           <div class="icon i-left">
@@ -39,7 +49,13 @@
         </div>
       </div>
     </div>
-    <audio ref="audioRef" @pause="pause" @canplay="ready" @error="error"></audio>
+    <audio ref="audioRef"
+           @pause="pause"
+           @canplay="ready"
+           @error="error"
+           @timeupdate="updateTime"
+           @ended="end"
+    ></audio>
   </div>
 </template>
 
@@ -48,15 +64,21 @@
   import { computed, watch, ref } from 'vue'
   import useMode from './use-mode'
   import useFavorite from './use-favorite'
+  import ProgressBar from './progress-bar'
+  import { formatTime } from '@/assets/js/utils'
+  import { PLAY_MODE } from '@/assets/js/constant'
 
   export default {
     name: 'player',
+    components: { ProgressBar },
     setup () {
       /*
       * data
       * */
       const audioRef = ref(null)
       const songReady = ref(false)
+      const currentTime = ref(0)
+      let progressChanging = false
 
       /*
       * veux
@@ -66,6 +88,7 @@
       const currentSong = computed(() => store.getters.currentSong)
       const playing = computed(() => store.state.playing)
       const currentIndex = computed(() => store.state.currentIndex)
+      const playMode = computed(() => store.state.playMode)
 
       /*
       * hooks
@@ -83,6 +106,11 @@
         return playing.value ? 'icon-pause' : 'icon-play'
       })
 
+      // 歌曲进度
+      const progress = computed(() => {
+        return currentTime.value / currentSong.value.duration
+      })
+
       // 在歌曲没有准备好时，给按钮一个disable样式，让其不能点击
       const disableCls = computed(() => {
         return songReady.value ? '' : 'disable'
@@ -97,7 +125,8 @@
         if (!newSong.id || !newSong.url) {
           return
         }
-        // 当歌曲变化的时候，songReady置为false
+        // 当歌曲变化的时候，songReady置为false，时间置为0
+        currentTime.value = 0
         songReady.value = false
         const audioEl = audioRef.value
         audioEl.src = newSong.url
@@ -184,6 +213,7 @@
         const audioEl = audioRef.value
         audioEl.currentTime = 0
         audioEl.play()
+        store.commit('setPlayingState', true)
       }
 
       // 准备歌曲
@@ -199,11 +229,48 @@
         songReady.value = true
       }
 
+      // 监听播放时间，这里控制歌曲播放的时间位置
+      function updateTime (e) {
+        if (!progressChanging) {
+          currentTime.value = e.target.currentTime
+        }
+      }
+
+      // 拖动时，监听左侧的时间
+      function onProgressChanging (progress) {
+        progressChanging = true
+        currentTime.value = currentSong.value.duration * progress
+      }
+
+      // 拖动后，修改播放的时间
+      function onProgressChanged (progress) {
+        progressChanging = false
+        audioRef.value.currentTime = currentTime.value = currentSong.value.duration * progress
+        // 当歌曲暂停的时候，拖动进度条，歌曲会播放
+        if (!playing.value) {
+          store.commit('setPlayingState', true)
+        }
+      }
+
+      // 歌曲播放完后面的操作
+      function end () {
+        // 时间重置为0
+        currentTime.value = 0
+        // 如果播放模式为循环播放，那么就循环，如果不是，就执行下一步
+        if (playMode.value === PLAY_MODE.loop) {
+          loop()
+        } else {
+          next()
+        }
+      }
+
       return {
         audioRef,
+        currentTime,
         fullScreen,
         currentSong,
         playIcon,
+        progress,
         disableCls,
         goBack,
         togglePlay,
@@ -212,6 +279,11 @@
         next,
         ready,
         error,
+        updateTime,
+        formatTime,
+        onProgressChanging,
+        onProgressChanged,
+        end,
         // mode
         modeIcon,
         changeMode,
@@ -287,6 +359,30 @@
         position: absolute;
         bottom: 50px;
         width: 100%;
+        // 进度条
+        .progress-wrapper {
+          display: flex;
+          align-items: center;
+          width: 80%;
+          margin: 0 auto;
+          padding: 10px 0;
+          .time {
+            color: $color-text;
+            font-size: $font-size-small;
+            flex: 0 0 40px;
+            line-height: 30px;
+            width: 40px;
+            &.time-l {
+              text-align: left;
+            }
+            &.time-r {
+              text-align: right;
+            }
+          }
+          .progress-bar-wrapper {
+            flex: 1;
+          }
+        }
         // 操作按钮
         .operators {
           display: flex;
