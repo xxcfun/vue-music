@@ -19,3 +19,14 @@ body, html {
 .slide-enter-from, .slide-leave-to {
   transform: translate3d(100%, 0, 0);
 }
+
+/* 唱片旋转 */
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

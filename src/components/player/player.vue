@@ -17,6 +17,20 @@
         <h1 class="title">{{ currentSong.name }}</h1>
         <h2 class="subtitle">{{ currentSong.singer }}</h2>
       </div>
+      <!-- 唱片 -->
+      <div class="middle">
+        <div class="middle-l">
+          <div class="cd-wrapper">
+            <div ref="cdRef"
+                 class="cd">
+              <img ref="cdImageRef"
+                   class="image"
+                   :class="cdCls"
+                   :src="currentSong.pic" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- 底部 -->
       <div class="bottom">
         <!-- 进度条 -->
@@ -64,6 +78,7 @@
   import { computed, watch, ref } from 'vue'
   import useMode from './use-mode'
   import useFavorite from './use-favorite'
+  import useCd from './use-cd'
   import ProgressBar from './progress-bar'
   import { formatTime } from '@/assets/js/utils'
   import { PLAY_MODE } from '@/assets/js/constant'
@@ -95,6 +110,7 @@
       * */
       const { modeIcon, changeMode } = useMode()
       const { getFavoriteIcon, toggleFavorite } = useFavorite()
+      const { cdCls, cdRef, cdImageRef } = useCd()
 
       /*
       * computed
@@ -289,7 +305,11 @@
         changeMode,
         // favorite
         getFavoriteIcon,
-        toggleFavorite
+        toggleFavorite,
+        // cd
+        cdCls,
+        cdRef,
+        cdImageRef
       }
     }
   }
@@ -352,6 +372,49 @@
           text-align: center;
           font-size: $font-size-medium;
           color: $color-text;
+        }
+      }
+      // 唱片
+      .middle {
+        position: fixed;
+        width: 100%;
+        top: 80px;
+        bottom: 170px;
+        white-space: nowrap;
+        font-size: 0;
+        .middle-l {
+          display: inline-block;
+          vertical-align: top;
+          position: relative;
+          width: 100%;
+          height: 0;
+          padding-top: 80%;
+          .cd-wrapper {
+            position: absolute;
+            left: 10%;
+            top: 0;
+            width: 80%;
+            box-sizing: border-box;
+            height: 100%;
+            .cd {
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+              img {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+                border-radius: 50%;
+                border: 10px solid rgba(255, 255, 255, 0.1);
+              }
+              .playing {
+                animation: rotate 20s linear infinite;
+              }
+            }
+          }
         }
       }
       // 底部
