@@ -17,7 +17,8 @@
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue3-lazy": "^1.0.0-alpha.1",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "lyric-parser": "^1.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -36,6 +37,7 @@
     "eslint-plugin-vue": "^7.0.0",
     "node-sass": "^5.0.0",
     "pinyin": "^2.10.2",
-    "sass-loader": "^10.1.0"
+    "sass-loader": "^10.1.0",
+    "js-base64": "^3.6.0"
   }
 }

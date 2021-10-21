@@ -19,6 +19,7 @@
       </div>
       <!-- 唱片 -->
       <div class="middle">
+        <!-- 旋转图片 -->
         <div class="middle-l">
           <div class="cd-wrapper">
             <div ref="cdRef"
@@ -29,7 +30,27 @@
                    :src="currentSong.pic" alt="">
             </div>
           </div>
+          <div class="playing-lyric-wrapper">
+            <div class="playing-lyric">{{ playingLyric }}</div>
+          </div>
         </div>
+        <!-- 滚动歌词 -->
+        <scroll class="middle-r" ref="lyricScrollRef">
+          <div class="lyric-wrapper">
+            <div v-if="currentLyric" ref="lyricListRef">
+              <p class="text"
+                 :class="{'current': currentLineNum === index}"
+                 v-for="(line, index) in currentLyric.lines"
+                 :key="line.num"
+              >
+                {{ line.txt }}
+              </p>
+            </div>
+            <div class="pure-music" v-show="pureMusicLyric">
+              <p>{{ pureMusicLyric }}</p>
+            </div>
+          </div>
+        </scroll>
       </div>
       <!-- 底部 -->
       <div class="bottom">
@@ -79,13 +100,15 @@
   import useMode from './use-mode'
   import useFavorite from './use-favorite'
   import useCd from './use-cd'
+  import useLyric from './use-lyric'
   import ProgressBar from './progress-bar'
+  import Scroll from '../base/scroll/scroll'
   import { formatTime } from '@/assets/js/utils'
   import { PLAY_MODE } from '@/assets/js/constant'
 
   export default {
     name: 'player',
-    components: { ProgressBar },
+    components: { Scroll, ProgressBar },
     setup () {
       /*
       * data
@@ -111,6 +134,7 @@
       const { modeIcon, changeMode } = useMode()
       const { getFavoriteIcon, toggleFavorite } = useFavorite()
       const { cdCls, cdRef, cdImageRef } = useCd()
+      const { currentLyric, currentLineNum, pureMusicLyric, playingLyric, lyricListRef, lyricScrollRef, playLyric, stopLyric } = useLyric({ songReady, currentTime })
 
       /*
       * computed
@@ -156,7 +180,13 @@
           return
         }
         const audioEl = audioRef.value
-        newPlaying ? audioEl.play() : audioEl.pause()
+        if (newPlaying) {
+          audioEl.play()
+          playLyric()
+        } else {
+          audioEl.pause()
+          stopLyric()
+        }
       })
 
       /*
@@ -238,6 +268,7 @@
           return
         }
         songReady.value = true
+        playLyric()
       }
 
       // 监听error，歌曲出错时允许切换歌曲
@@ -252,13 +283,16 @@
         }
       }
 
-      // 拖动时，监听左侧的时间
+      // 监听拖动时的操作，改变左侧的时间
       function onProgressChanging (progress) {
         progressChanging = true
         currentTime.value = currentSong.value.duration * progress
+        // 同步歌词列表，手指没有松开，歌词不能播放，等changed时再播放
+        playLyric()
+        stopLyric()
       }
 
-      // 拖动后，修改播放的时间
+      // 监听拖动后的操作，修改播放的时间
       function onProgressChanged (progress) {
         progressChanging = false
         audioRef.value.currentTime = currentTime.value = currentSong.value.duration * progress
@@ -266,6 +300,7 @@
         if (!playing.value) {
           store.commit('setPlayingState', true)
         }
+        playLyric()
       }
 
       // 歌曲播放完后面的操作
@@ -309,7 +344,14 @@
         // cd
         cdCls,
         cdRef,
-        cdImageRef
+        cdImageRef,
+        // lyric
+        currentLyric,
+        currentLineNum,
+        pureMusicLyric,
+        playingLyric,
+        lyricListRef,
+        lyricScrollRef
       }
     }
   }
@@ -382,8 +424,10 @@
         bottom: 170px;
         white-space: nowrap;
         font-size: 0;
+        // 旋转图片
         .middle-l {
           display: inline-block;
+          /*display: none; // 调试歌词用*/
           vertical-align: top;
           position: relative;
           width: 100%;
@@ -413,6 +457,46 @@
               .playing {
                 animation: rotate 20s linear infinite;
               }
+            }
+          }
+          .playing-lyric-wrapper {
+            width: 80%;
+            margin: 30px auto 0 auto;
+            overflow: hidden;
+            text-align: center;
+            .playing-lyric {
+              height: 20px;
+              line-height: 20px;
+              font-size: $font-size-medium;
+              color: $color-text-l;
+            }
+          }
+        }
+        // 滚动歌词
+        .middle-r {
+          display: inline-block;
+          vertical-align: top;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          .lyric-wrapper {
+            width: 80%;
+            margin: 0 auto;
+            overflow: hidden;
+            text-align: center;
+            .text {
+              line-height: 32px;
+              color: $color-text-l;
+              font-size: $font-size-medium;
+              &.current {
+                color: $color-text;
+              }
+            }
+            .pure-music {
+              padding-top: 50%;
+              line-height: 32px;
+              color: $color-text-l;
+              font-size: $font-size-medium;
             }
           }
         }
