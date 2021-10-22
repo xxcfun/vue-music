@@ -18,9 +18,14 @@
         <h2 class="subtitle">{{ currentSong.singer }}</h2>
       </div>
       <!-- 唱片 -->
-      <div class="middle">
+      <div class="middle"
+           @touchstart.prevent="onMiddleTouchStart"
+           @touchmove.prevent="onMiddleTouchMove"
+           @touchend.prevent="onMiddleTouchEnd"
+      >
         <!-- 旋转图片 -->
-        <div class="middle-l">
+        <div class="middle-l"
+             :style="middleLStyle">
           <div class="cd-wrapper">
             <div ref="cdRef"
                  class="cd">
@@ -35,7 +40,9 @@
           </div>
         </div>
         <!-- 滚动歌词 -->
-        <scroll class="middle-r" ref="lyricScrollRef">
+        <scroll class="middle-r"
+                :style="middleRStyle"
+                ref="lyricScrollRef">
           <div class="lyric-wrapper">
             <div v-if="currentLyric" ref="lyricListRef">
               <p class="text"
@@ -54,6 +61,11 @@
       </div>
       <!-- 底部 -->
       <div class="bottom">
+        <!-- 滑块 -->
+        <div class="dot-wrapper">
+          <span class="dot" :class="{'active': currentShow === 'cd'}"></span>
+          <span class="dot" :class="{'active': currentShow === 'lyric'}"></span>
+        </div>
         <!-- 进度条 -->
         <div class="progress-wrapper">
           <span class="time time-l">{{ formatTime(currentTime) }}</span>
@@ -101,6 +113,7 @@
   import useFavorite from './use-favorite'
   import useCd from './use-cd'
   import useLyric from './use-lyric'
+  import useMiddleInteractive from './use-middle-interactive'
   import ProgressBar from './progress-bar'
   import Scroll from '../base/scroll/scroll'
   import { formatTime } from '@/assets/js/utils'
@@ -135,6 +148,7 @@
       const { getFavoriteIcon, toggleFavorite } = useFavorite()
       const { cdCls, cdRef, cdImageRef } = useCd()
       const { currentLyric, currentLineNum, pureMusicLyric, playingLyric, lyricListRef, lyricScrollRef, playLyric, stopLyric } = useLyric({ songReady, currentTime })
+      const { currentShow, middleLStyle, middleRStyle, onMiddleTouchStart, onMiddleTouchMove, onMiddleTouchEnd } = useMiddleInteractive()
 
       /*
       * computed
@@ -351,7 +365,14 @@
         pureMusicLyric,
         playingLyric,
         lyricListRef,
-        lyricScrollRef
+        lyricScrollRef,
+        // middle-interactive
+        currentShow,
+        middleLStyle,
+        middleRStyle,
+        onMiddleTouchStart,
+        onMiddleTouchMove,
+        onMiddleTouchEnd
       }
     }
   }
@@ -506,6 +527,25 @@
         position: absolute;
         bottom: 50px;
         width: 100%;
+        // 滑动块
+        .dot-wrapper {
+          text-align: center;
+          font-size: 0;
+          .dot {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: $color-text-l;
+            &.active {
+              width: 20px;
+              border-radius: 5px;
+              background: $color-text-ll;
+            }
+          }
+        }
         // 进度条
         .progress-wrapper {
           display: flex;
