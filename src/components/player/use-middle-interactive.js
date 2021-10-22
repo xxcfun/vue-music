@@ -52,11 +52,13 @@ export default function useMiddleInteractive() {
       }
     }
 
+    // 赋给cd层的效果
     middleLStyle.value = {
       opacity: 1 - touch.percent,
       transitionDuration: '0ms'
     }
 
+    // 赋给歌词层的效果
     middleRStyle.value = {
       transform: `translate3d(${offsetWidth}px, 0, 0)`,
       transitionDuration: '0ms'

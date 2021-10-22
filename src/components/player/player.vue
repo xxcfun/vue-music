@@ -366,7 +366,7 @@
         playingLyric,
         lyricListRef,
         lyricScrollRef,
-        // middle-interactive
+        // middleinteractive
         currentShow,
         middleLStyle,
         middleRStyle,
