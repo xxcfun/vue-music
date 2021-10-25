@@ -48,10 +48,8 @@
     watch: {
       // 监听进度条进度
       progress(newProgress) {
-        // 进度条的宽度
-        const barWidth = this.$el.clientWidth - progressBtnWidth
-        // 进度 * 总长 = 偏移位置
-        this.offset = barWidth * newProgress
+        // 调用函数
+        this.setOffset(newProgress)
       }
     },
     created () {
@@ -96,6 +94,13 @@
         const barWidth = this.$el.clientWidth - progressBtnWidth
         const progress = offsetWidth / barWidth
         this.$emit('progress-changed', progress)
+      },
+      // 监听进度条进度
+      setOffset (progress) {
+        // 进度条的宽度
+        const barWidth = this.$el.clientWidth - progressBtnWidth
+        // 进度 * 总长 = 偏移位置
+        this.offset = barWidth * progress
       }
     }
   }

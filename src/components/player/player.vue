@@ -1,6 +1,6 @@
 <template>
   <!-- 播放器 -->
-  <div class="player">
+  <div class="player" v-show="playList.length">
     <div class="normal-player"
          v-show="fullScreen">
       <!-- 背景图片 -->
@@ -70,9 +70,11 @@
         <div class="progress-wrapper">
           <span class="time time-l">{{ formatTime(currentTime) }}</span>
           <div class="progress-bar-wrapper">
-            <progress-bar :progress="progress"
-                          @progress-changing="onProgressChanging"
-                          @progress-changed="onProgressChanged"/>
+            <progress-bar
+              ref="barRef"
+              :progress="progress"
+              @progress-changing="onProgressChanging"
+              @progress-changed="onProgressChanged"/>
           </div>
           <span class="time time-r">{{ formatTime(currentSong.duration) }}</span>
         </div>
@@ -96,6 +98,8 @@
         </div>
       </div>
     </div>
+    <!-- mini播放器 -->
+    <mini-player :progress="progress" :toggle-play="togglePlay"/>
     <audio ref="audioRef"
            @pause="pause"
            @canplay="ready"
@@ -108,7 +112,7 @@
 
 <script>
   import { useStore } from 'vuex'
-  import { computed, watch, ref } from 'vue'
+  import { computed, watch, ref, nextTick } from 'vue'
   import useMode from './use-mode'
   import useFavorite from './use-favorite'
   import useCd from './use-cd'
@@ -116,17 +120,19 @@
   import useMiddleInteractive from './use-middle-interactive'
   import ProgressBar from './progress-bar'
   import Scroll from '../base/scroll/scroll'
+  import MiniPlayer from './mini-player'
   import { formatTime } from '@/assets/js/utils'
   import { PLAY_MODE } from '@/assets/js/constant'
 
   export default {
     name: 'player',
-    components: { Scroll, ProgressBar },
+    components: { MiniPlayer, Scroll, ProgressBar },
     setup () {
       /*
       * data
       * */
       const audioRef = ref(null)
+      const barRef = ref(null)
       const songReady = ref(false)
       const currentTime = ref(0)
       let progressChanging = false
@@ -200,6 +206,15 @@
         } else {
           audioEl.pause()
           stopLyric()
+        }
+      })
+
+      // 监听mini播放器改为全屏播放器时进度条的变化
+      watch(fullScreen, async (newFullScreen) => {
+        if (newFullScreen) {
+          // 将回调推迟到下一个 DOM 更新周期之后执行。在更改了一些数据以等待 DOM 更新后立即使用它
+          await nextTick()
+          barRef.value.setOffset(progress.value)
         }
       })
 
@@ -331,9 +346,11 @@
 
       return {
         audioRef,
+        barRef,
         currentTime,
         fullScreen,
         currentSong,
+        playList,
         playIcon,
         progress,
         disableCls,
