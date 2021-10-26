@@ -18,7 +18,8 @@
     "vue-router": "^4.0.0-0",
     "vue3-lazy": "^1.0.0-alpha.1",
     "vuex": "^4.0.0-0",
-    "lyric-parser": "^1.0.1"
+    "lyric-parser": "^1.0.1",
+    "create-keyframe-animation": "^0.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
