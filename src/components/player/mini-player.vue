@@ -38,20 +38,25 @@
              @click.stop="togglePlay"></i>
         </progress-circle>
       </div>
+      <div class="control" @click.stop="showPlaylist">
+        <i class="icon-playlist"></i>
+      </div>
+      <play-list ref="playListRef"></play-list>
     </div>
   </transition>
 </template>
 
 <script>
   import { useStore } from 'vuex'
-  import { computed } from 'vue'
+  import { computed, ref } from 'vue'
   import useCd from './use-cd'
   import useMiniSlider from './use-mini-slider'
   import ProgressCircle from './progress-circle'
+  import PlayList from './play-list'
 
   export default {
     name: 'mini-player',
-    components: { ProgressCircle },
+    components: { PlayList, ProgressCircle },
     props: {
       progress: {
         type: Number,
@@ -60,10 +65,13 @@
       togglePlay: Function
     },
     setup () {
+      const playListRef = ref(null)
+
       const store = useStore()
       const fullScreen = computed(() => store.state.fullScreen)
       const currentSong = computed(() => store.getters.currentSong)
       const playing = computed(() => store.state.playing)
+      const playList = computed(() => store.state.playList)
 
       /*
       * hooks
@@ -71,25 +79,26 @@
       const { cdCls, cdRef, cdImageRef } = useCd()
       const { sliderWrapperRef } = useMiniSlider()
 
-      /*
-      * computed
-      * */
-      const playList = computed(() => store.state.playList)
-
       const miniPlayIcon = computed(() => {
-        return playing.value ? 'icon-pause' : 'icon-play'
+        return playing.value ? 'icon-pause-mini' : 'icon-play-mini'
       })
 
       function showNormalPlayer () {
         store.commit('setFullScreen', true)
       }
 
+      function showPlaylist () {
+        playListRef.value.show()
+      }
+
       return {
+        playListRef,
         fullScreen,
         currentSong,
         playList,
         miniPlayIcon,
         showNormalPlayer,
+        showPlaylist,
         // cd
         cdCls,
         cdRef,
@@ -165,6 +174,12 @@
       flex: 0 0 30px;
       width: 30px;
       padding: 0 10px;
+      .icon-playlist {
+        position: relative;
+        top: -2px;
+        font-size: 28px;
+        color: $color-theme-d;
+      }
       .icon-mini {
         position: absolute;
         left: 0;

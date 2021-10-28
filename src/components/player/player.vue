@@ -202,6 +202,7 @@
         const audioEl = audioRef.value
         audioEl.src = newSong.url
         audioEl.play()
+        store.commit('setPlayingState', true)
       })
 
       // 监听audio里面暂停与播放
@@ -265,10 +266,6 @@
             index = list.length - 1
           }
           store.commit('setCurrentIndex', index)
-          // playing暂停的话，改为播放
-          if (!playing.value) {
-            store.commit('setPlayingState', true)
-          }
         }
       }
 
@@ -287,10 +284,6 @@
             index = 0
           }
           store.commit('setCurrentIndex', index)
-          // playing暂停的话，改为播放
-          if (!playing.value) {
-            store.commit('setPlayingState', true)
-          }
         }
       }
 

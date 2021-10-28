@@ -40,7 +40,6 @@ export default function useMiniSlider() {
           // 监听slidePageChanged，把当前索引赋值给currentIndex，实现切歌的功能
           sliderVal.on('slidePageChanged', ({ pageX }) => {
             store.commit('setCurrentIndex', pageX)
-            store.commit('setPlayingState', true)
           })
         } else {
           sliderVal.refresh()
@@ -58,6 +57,14 @@ export default function useMiniSlider() {
     watch(currentIndex, (newIndex) => {
       if (sliderVal && sliderShow.value) {
         sliderVal.goToPage(newIndex, 0, 0)
+      }
+    })
+
+    // 监听列表变化，刷新dom
+    watch(playList, async (newlist) => {
+      if (sliderVal && sliderShow.value && newlist.length) {
+        await nextTick()
+        sliderVal.refresh()
       }
     })
   })
