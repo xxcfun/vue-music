@@ -44,7 +44,7 @@
 <script>
   import Scroll from '../base/scroll/scroll'
   import SongList from '../base/song-list/song-list'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapState } from 'vuex'
 
   const RESERVED_HEIGHT = 40
 
@@ -118,8 +118,10 @@
       },
       // 实时获取scroll组件的高度，实现scroll滚动
       scrollStyle () {
+        const bottom = this.playList.length ? '60px' : '0'
         return {
-          top: `${this.imageHeight}px`
+          top: `${this.imageHeight}px`,
+          bottom
         }
       },
       // 添加动态模糊
@@ -133,7 +135,10 @@
         return {
           backdropFilter: `blur(${blur}px)`
         }
-      }
+      },
+      ...mapState([
+        'playList'
+      ])
     },
     mounted () {
       this.imageHeight = this.$refs.bgImage.clientHeight
