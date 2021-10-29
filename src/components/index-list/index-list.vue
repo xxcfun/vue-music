@@ -49,7 +49,7 @@
 </template>
 
 <script>
-  import Scroll from '../scroll/scroll'
+  import Scroll from '../wrap-scroll'
   import useFixed from './use-fixed'
   import useShortcut from './use-shortcut'
 

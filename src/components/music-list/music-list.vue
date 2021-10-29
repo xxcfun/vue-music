@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import Scroll from '../base/scroll/scroll'
+  import Scroll from '../wrap-scroll'
   import SongList from '../base/song-list/song-list'
   import { mapActions, mapState } from 'vuex'
 
