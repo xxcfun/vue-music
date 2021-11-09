@@ -1,4 +1,5 @@
 <template>
+  <!-- 歌单专辑详情 -->
   <div class="album">
     <music-list
       :songs="songs"
