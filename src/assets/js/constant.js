@@ -2,6 +2,8 @@
 export const SINGER_KEY = '__singer__'
 // 定义收藏歌曲的key值
 export const FAVORITE_KEY = '__favorite__'
+// 定义歌单key值
+export const ALBUM_KEY = '__album__'
 
 // 定义歌曲播放模式
 export const PLAY_MODE = {
