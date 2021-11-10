@@ -35,7 +35,9 @@
     >
       <div class="song-list-wrapper">
         <song-list :songs="songs"
-                   @select="selectItem"/>
+                   @select="selectItem"
+                   :rank="rank"
+        />
       </div>
     </scroll>
   </div>
@@ -64,7 +66,8 @@
       noResultText: {
         type: String,
         default: '抱歉，没有找到可播放的歌曲'
-      }
+      },
+      rank: Boolean
     },
     data () {
       return {
