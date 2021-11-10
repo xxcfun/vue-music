@@ -1,6 +1,6 @@
 <template>
-  <!-- 歌单专辑详情 -->
   <div class="album">
+    <!-- 歌单专辑详情 -->
     <music-list
       :songs="songs"
       :title="title"

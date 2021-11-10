@@ -1,6 +1,6 @@
 <template>
-  <!-- 榜单详情 -->
   <div class="top-detail">
+    <!-- 榜单详情 -->
     <music-list
       :songs="songs"
       :title="title"
