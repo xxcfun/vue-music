@@ -6,7 +6,7 @@
       <search-input v-model="query"/>
     </div>
     <!-- 热门搜索 -->
-    <div class="search-content">
+    <div class="search-content" v-show="!query">
       <div class="hot-keys">
         <h1 class="title">热门搜索</h1>
         <ul>
@@ -21,6 +21,19 @@
         </ul>
       </div>
     </div>
+    <!-- 搜索结果 -->
+    <div class="search-result" v-show="query">
+      <suggest :query="query"
+               @select-song="selectSong"
+               @select-singer="selectSinger"
+      />
+    </div>
+    <!-- 歌手搜索结果 -->
+    <router-view v-slot="{ Component }">
+      <transition appear name="slide">
+        <component :is="Component" :data="selectedSinger"/>
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -28,26 +41,59 @@
   import SearchInput from '../components/search/search-input'
   import { ref } from 'vue'
   import { getHotKeys } from '../service/search'
+  import Suggest from '../components/search/suggest'
+  import { useStore } from 'vuex'
+  import { useRouter } from 'vue-router'
+  import storage from 'good-storage'
+  import { SINGER_KEY } from '../assets/js/constant'
 
   export default {
     name: 'search',
-    components: { SearchInput },
+    components: { Suggest, SearchInput },
     setup () {
       const query = ref('')
       const hotKeys = ref([])
+      const selectedSinger = ref(null)
+
+      const store = useStore()
+
+      const router = useRouter()
 
       getHotKeys().then((result) => {
         hotKeys.value = result.hotKeys
       })
 
+      // 将query置空
       function addQuery (s) {
         query.value = s
+      }
+
+      // 选中歌曲
+      function selectSong (song) {
+        store.dispatch('addSong', song)
+      }
+
+      // 选中歌手
+      function selectSinger (singer) {
+        selectedSinger.value = singer
+        // 跳转路由前先进行缓存
+        cacheSinger()
+
+        router.push({ path: `/search/${singer.mid}` })
+      }
+
+      // 将歌手缓存，逻辑和之前一样
+      function cacheSinger (singer) {
+        storage.session.set(SINGER_KEY, singer)
       }
 
       return {
         query,
         hotKeys,
-        addQuery
+        selectedSinger,
+        addQuery,
+        selectSong,
+        selectSinger
       }
     }
   }
@@ -84,6 +130,10 @@
           color: $color-text-d;
         }
       }
+    }
+    .search-result {
+      flex: 1;
+      overflow: hidden;
     }
   }
 </style>

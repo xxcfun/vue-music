@@ -17,7 +17,8 @@ export function processSongs (songs) {
       return song
     }).filter((song) => {
       // 过滤字段，返回前端的url都是能够播放的
-      return song.url.indexOf('vkey') > -1
+      // 添加song.url保护，防止取不到mid song.url为undefault
+      return song.url && song.url.indexOf('vkey') > -1
     })
   })
 }

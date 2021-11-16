@@ -92,3 +92,33 @@ export function clearSongList ({ commit }) {
   commit('setCurrentIndex', 0)
   commit('setPlayingState', false)
 }
+
+// 添加歌曲到队列
+export function addSong ({ commit, state }, song) {
+  const playList = state.playList.slice()
+  const sequenceList = state.sequenceList.slice()
+  let currentIndex = state.currentIndex
+  const playIndex = findIndex(playList, song)
+
+  // 判断该歌曲是否已经存在列表中
+  if (playIndex > -1) {
+    // 存在就修改index值，指向该歌曲
+    currentIndex = playIndex
+  } else {
+    // 不存在就加入，再改变index值
+    playList.push(song)
+    currentIndex = playList.length - 1
+  }
+
+  const sequenceIndex = findIndex(sequenceList, song)
+  // 如果不存在就加入准备队列
+  if (sequenceIndex === -1) {
+    sequenceList.push(song)
+  }
+
+  commit('setSequenceList', sequenceList)
+  commit('setPlayList', playList)
+  commit('setCurrentIndex', currentIndex)
+  commit('setPlayingState', true)
+  commit('setFullScreen', true)
+}
