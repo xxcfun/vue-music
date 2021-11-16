@@ -35,6 +35,10 @@ const mutations = {
       }
       return item
     })
+  },
+  // 设置搜索历史关键词
+  setSearchHistory (state, searches) {
+    state.searchHistory = searches
   }
 }
 

@@ -6,6 +6,8 @@ export const FAVORITE_KEY = '__favorite__'
 export const ALBUM_KEY = '__album__'
 // 定义排行榜key值
 export const TOP_KEY = '__top__'
+// 定义搜索key值
+export const SEARCH_KEY = '__search__'
 
 // 定义歌曲播放模式
 export const PLAY_MODE = {
