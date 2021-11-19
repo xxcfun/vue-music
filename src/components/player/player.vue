@@ -120,6 +120,9 @@
 </template>
 
 <script>
+  import ProgressBar from './progress-bar'
+  import Scroll from '../base/scroll/scroll'
+  import MiniPlayer from './mini-player'
   import { useStore } from 'vuex'
   import { computed, watch, ref, nextTick } from 'vue'
   import useMode from './use-mode'
@@ -128,9 +131,7 @@
   import useLyric from './use-lyric'
   import useMiddleInteractive from './use-middle-interactive'
   import useAnimation from './use-animation'
-  import ProgressBar from './progress-bar'
-  import Scroll from '../base/scroll/scroll'
-  import MiniPlayer from './mini-player'
+  import usePlayHistory from './use-play-history'
   import { formatTime } from '@/assets/js/utils'
   import { PLAY_MODE } from '@/assets/js/constant'
 
@@ -166,6 +167,7 @@
       const { currentLyric, currentLineNum, pureMusicLyric, playingLyric, lyricListRef, lyricScrollRef, playLyric, stopLyric } = useLyric({ songReady, currentTime })
       const { currentShow, middleLStyle, middleRStyle, onMiddleTouchStart, onMiddleTouchMove, onMiddleTouchEnd } = useMiddleInteractive()
       const { cdWrapperRef, enter, afterEnter, leave, afterLeave } = useAnimation()
+      const { savePlay } = usePlayHistory()
 
       /*
       * computed
@@ -302,6 +304,8 @@
         }
         songReady.value = true
         playLyric()
+        // 在歌曲准备的时候保存播放历史
+        savePlay(currentSong.value)
       }
 
       // 监听error，歌曲出错时允许切换歌曲

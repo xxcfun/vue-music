@@ -50,6 +50,12 @@
               </li>
             </transition-group>
           </scroll>
+          <div class="list-add" @click="showAddSong">
+            <div class="add">
+              <i class="icon-add"></i>
+              <span class="text">添加歌曲到队列</span>
+            </div>
+          </div>
           <div class="list-footer" @click="hide">
             <span>关闭</span>
           </div>
@@ -60,6 +66,7 @@
           text="是否清空播放列表"
           confirmBtnText="清空"
         ></confirm>
+        <add-song ref="addSongRef"/>
       </div>
     </transition>
   </teleport>
@@ -67,15 +74,16 @@
 
 <script>
   import Scroll from '../base/scroll/scroll'
+  import Confirm from '../base/confirm/confirm'
+  import AddSong from '../add-song/add-song'
   import { ref, computed, nextTick, watch } from 'vue'
   import { useStore } from 'vuex'
   import useMode from './use-mode'
   import useFavorite from './use-favorite'
-  import Confirm from '../base/confirm/confirm'
 
   export default {
     name: 'play-list',
-    components: { Confirm, Scroll },
+    components: { AddSong, Confirm, Scroll },
     setup () {
       // data
       const visible = ref(false)
@@ -83,6 +91,7 @@
       const scrollRef = ref(null)
       const listRef = ref(null)
       const confirmRef = ref(null)
+      const addSongRef = ref(null)
 
       // vuex
       const store = useStore()
@@ -175,12 +184,18 @@
         hide()
       }
 
+      // 唤起添加歌曲组件
+      function showAddSong () {
+        addSongRef.value.show()
+      }
+
       return {
         visible,
         removing,
         scrollRef,
         listRef,
         confirmRef,
+        addSongRef,
         playList,
         sequenceList,
         getCurrentIcon,
@@ -190,6 +205,7 @@
         removeSong,
         showConfirm,
         confirmClear,
+        showAddSong,
         // mode
         modeIcon,
         modeText,
@@ -292,6 +308,25 @@
             &.disable {
               color: $color-theme-d;
             }
+          }
+        }
+      }
+      .list-add {
+        width: 140px;
+        margin: 20px auto 20px auto;
+        .add {
+          display: flex;
+          align-items: center;
+          padding: 8px 16px;
+          border: 1px solid $color-text-l;
+          border-radius: 100px;
+          color: $color-text-l;
+          .icon-add {
+            margin-right: 5px;
+            font-size: $font-size-small-s;
+          }
+          .text {
+            font-size: $font-size-small;
           }
         }
       }

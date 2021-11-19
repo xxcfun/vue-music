@@ -3,8 +3,12 @@ import storage from 'good-storage'
 // 插入数组（倒序插入）
 function inertArray (arr, val, compare, maxLen) {
   const index = arr.findIndex(compare)
-  if (index > -1) {
+  if (index === 0) {
     return
+  }
+  // 如果存在了，新添加的数组放在队首
+  if (index > 0) {
+    arr.splice(index, 1)
   }
   // unshift：向数组的开头添加一个或更多元素
   arr.unshift(val)

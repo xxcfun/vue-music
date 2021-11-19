@@ -1,0 +1,60 @@
+<template>
+  <!-- message提示框组件 -->
+  <teleport to="body">
+    <transition-group name="slide-down">
+      <div class="message" v-show="visible" @click="hide">
+        <slot></slot>
+      </div>
+    </transition-group>
+  </teleport>
+</template>
+
+<script>
+  export default {
+    name: 'message',
+    props: {
+      delay: {
+        type: Number,
+        default: 2000
+      }
+    },
+    data () {
+      return {
+        visible: false
+      }
+    },
+    methods: {
+      show () {
+        this.visible = true
+        // 创建前先clear定时器
+        clearTimeout(this.timer)
+        // 创建定时器
+        this.timer = setTimeout(() => {
+          this.hide()
+        }, this.delay)
+      },
+      hide () {
+        clearTimeout(this.timer)
+        this.visible = false
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  .message {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 400;
+    background: $color-dialog-background;
+
+    &.slider-down-enter-active, &.slider-down-leave-active {
+      transition: all 0.3s;
+    }
+
+    &.slider-down-enter-from, &.slider-down-leave-to {
+      transform: translate3d(0, -100%, 0);
+    }
+  }
+</style>
