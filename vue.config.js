@@ -1,6 +1,14 @@
 const registerRouter = require('./backend/router')
 
 module.exports = {
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].title = '在线摸鱼音乐播放器'
+        return args
+      })
+  },
   css: {
     loaderOptions: {
       sass: {
@@ -13,8 +21,16 @@ module.exports = {
     }
   },
   devServer: {
+    // 注册后端路由
     before (app) {
       registerRouter(app)
+    }
+  },
+  configureWebpack: (config) => {
+    // 加载一个BundleAnalyzerPlugin插件
+    if (process.env.npm_config_report) {
+      const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+      config.plugins.push(new BundleAnalyzerPlugin())
     }
   }
 }

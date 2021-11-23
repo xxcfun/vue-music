@@ -4,12 +4,23 @@
   <!-- 菜单导航栏 -->
   <tab/>
   <!-- 页面主要内容 -->
-  <router-view :style="viewStyle"/>
+  <!--
+     使用keep-alive，需要把scroll组件和slider组件在onActivated和onDeactivated中进行加载和禁用
+   -->
+  <router-view :style="viewStyle" v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component"/>
+    </keep-alive>
+  </router-view>
+  <!-- user-center -->
   <router-view :style="viewStyle" name="user" v-slot="{ Component }">
     <transition appear name="slide">
-      <component :is="Component"/>
+      <keep-alive>
+        <component :is="Component"/>
+      </keep-alive>
     </transition>
   </router-view>
+  <!-- 播放器 -->
   <player/>
 </template>
 <script>
