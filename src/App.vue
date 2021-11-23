@@ -5,6 +5,11 @@
   <tab/>
   <!-- 页面主要内容 -->
   <router-view :style="viewStyle"/>
+  <router-view :style="viewStyle" name="user" v-slot="{ Component }">
+    <transition appear name="slide">
+      <component :is="Component"/>
+    </transition>
+  </router-view>
   <player/>
 </template>
 <script>

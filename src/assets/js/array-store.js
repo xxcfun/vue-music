@@ -53,3 +53,8 @@ export function clear (key) {
   storage.remove(key)
   return []
 }
+
+// 全部保存方法
+export function saveAll (items, key) {
+  storage.set(key, items)
+}
