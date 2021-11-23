@@ -32,5 +32,9 @@ module.exports = {
       const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
       config.plugins.push(new BundleAnalyzerPlugin())
     }
-  }
+  },
+  // 生产环境关闭sourceMap，防止源码泄露
+  productionSourceMap: false,
+  // 生产环境下项目部署在根路径下面的子路径上
+  publicPath: process.env.NODE_PATH === 'production' ? '/music-moyu/' : '/'
 }
