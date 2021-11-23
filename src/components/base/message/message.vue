@@ -1,11 +1,11 @@
 <template>
   <!-- message提示框组件 -->
   <teleport to="body">
-    <transition-group name="slide-down">
+    <transition name="slide-down">
       <div class="message" v-show="visible" @click="hide">
         <slot></slot>
       </div>
-    </transition-group>
+    </transition>
   </teleport>
 </template>
 
@@ -49,11 +49,11 @@
     z-index: 400;
     background: $color-dialog-background;
 
-    &.slider-down-enter-active, &.slider-down-leave-active {
+    &.slide-down-enter-active, &.slide-down-leave-active {
       transition: all 0.3s;
     }
 
-    &.slider-down-enter-from, &.slider-down-leave-to {
+    &.slide-down-enter-from, &.slide-down-leave-to {
       transform: translate3d(0, -100%, 0);
     }
   }
