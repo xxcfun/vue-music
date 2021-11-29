@@ -24,7 +24,7 @@ npm run deploy
 目前没碰到明显错误，但线上会有报错，后面有时间再做修改。
 
 ### 线上预览
-[music.qnmlgb.top:2233/music-moyu/](music.qnmlgb.top:2233/music-moyu/)
+[music.qnmlgb.top:2233/music-moyu/](http://music.qnmlgb.top:2233/music-moyu/)
 
 ### 未能解决的线上问题
 * 歌词滚动页面的dom没有添加 transform: translate3d(-320px, 0px, 0px);
@@ -52,4 +52,4 @@ npm run deploy
 ```
 
 ### 博客
-[qnmlgb.top | 一条爱吃屎的狗](qnmlgb.top)
+[qnmlgb.top | 一条爱吃屎的狗](https://www.qnmlgb.top)
